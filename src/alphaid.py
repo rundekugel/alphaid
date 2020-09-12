@@ -36,6 +36,8 @@ class Alphaid:
   def getAlphaIdFromNumber(self, number):
     """get a alphanumeric representative of a number"""
     r= "" # alphanumeric_pool[0]*_idlen;
+    if not self._pool_len:
+      return None
     for pos in range(self._idlen-1, -1, -1):
       b = number%self._pool_len
       print(b)
