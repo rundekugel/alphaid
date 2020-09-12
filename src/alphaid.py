@@ -1,21 +1,30 @@
 #!/usr/bin/env python
- """get a alphanumeric representative of a number"""
 
-class Alphaid
- """
- get a alphanumeric representative of a number
- usage:
- a = Alphaid.alphaid(5) # 5=length of id 
- result = a.getAlphaIdFromNumber(345678)
- or
- result = getAlphaIdFromNumber(0xaabbccFF87)
- 
- """
+"""
+Get a alphanumeric representative of a number.
+Licence: MIT
+"""
+
+__author__  = "rundekugel@github.com"
+__version__ = "0.0.1"
+__date__    = "2020-10-12"
+
+
+class Alphaid:
+  """
+  get a alphanumeric representative of a number
+  usage:
+  a = Alphaid.alphaid(5) # 5=length of id 
+  result = a.getAlphaIdFromNumber(345678)
+  or
+  result = getAlphaIdFromNumber(0xaabbccFF87)
+
+  """
   alphanumeric_pool = "23456789abcdefghklmnpqrsuvwxyzABCDEFGHKLMNPQRSTUVWXYZ"
-  pool_len = None
+  _pool_len = None
   _idlen = None
   
-  def alphaid(self, idlen, pool=none):
+  def __init__(self, idlen, pool=None):
     """
     initiate this class with the length of the desired id-result
     and optionally a new pool of alphanumeric chars, to use for
@@ -27,12 +36,12 @@ class Alphaid
   def getAlphaIdFromNumber(self, number):
     """get a alphanumeric representative of a number"""
     r= "" # alphanumeric_pool[0]*_idlen;
-    for pos in range(_idlen-1, -1, -1):
-      b = number%pool_len
+    for pos in range(self._idlen-1, -1, -1):
+      b = number%self._pool_len
       print(b)
-      number /= pool_len
+      number /= self._pool_len
       print(number)
-      r = alphanumeric_pool[b] +r
+      r = self.alphanumeric_pool[b] +r
     return r
     
   def setAlphanumericPool(self, pool):
@@ -43,7 +52,13 @@ class Alphaid
     """
     if pool:
       self.alphanumeric_pool = pool
-    self.pool_len = len(alphanumeric_pool)
+    self._pool_len = len(self.alphanumeric_pool)
+    
+  def setAlphanumericPoolHex(self):
+    """
+    sets the pool to hex.
+    """
+    self.setAlphanumericPool("0123456789abcdef")
     
   def useOnlyUpperChars(self):
     """
@@ -53,22 +68,33 @@ class Alphaid
     self.alphanumeric_pool = "ABCDEFGHKLMNPQRSTUVWXYZ"
 
   def etherMacToNumber(self, mac):
-    """get number from mac-address"""
+    """get number from mac-address AA-BB-CC-DD-EE-FF or AA:BB:CC:DD:EE:FF"""
+    hexchars = "0123456789abcdef"
     r=0
-    return 0
+
+    for h in mac:
+      if h in hexchars:
+        r *= 0x10
+        r += int(h,0x10)
+    return r
     
   def _posInPool(self, char):
     """get position of char in alphanumeric_pool"""
     #if not char in self.alphanumeric_pool:
     #  return -1
-    for pos in range(self.pool_len):
+    for pos in range(self._pool_len):
       if char == self.alphanumeric_pool[pos]:
         return pos
     return -1
     
   def numberFromId(self, idstring):
     r=0
+    f=0
     for c in idstring:
-        
-# eof
+      p = self._posInPool(c)
+      if p>-1:
+       r += p * self._pool_len^f
+       f+=1
+    return p
     
+# eof
