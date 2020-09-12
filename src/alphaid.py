@@ -38,11 +38,12 @@ class Alphaid:
     r= "" # alphanumeric_pool[0]*_idlen;
     if not self._pool_len:
       return None
+    self._pool_len = len(self.alphanumeric_pool)
     for pos in range(self._idlen-1, -1, -1):
       b = number%self._pool_len
-      print(b)
+      #print(b)
       number /= self._pool_len
-      print(number)
+      #print(number)
       r = self.alphanumeric_pool[b] +r
     return r
     
@@ -60,7 +61,7 @@ class Alphaid:
     """
     sets the pool to hex.
     """
-    self.setAlphanumericPool("0123456789abcdef")
+    self.setAlphanumericPool("0123456789ABCDEF")
     
   def useOnlyUpperChars(self):
     """
@@ -70,10 +71,14 @@ class Alphaid:
     self.alphanumeric_pool = "ABCDEFGHKLMNPQRSTUVWXYZ"
 
   def etherMacToNumber(self, mac):
-    """get number from mac-address AA-BB-CC-DD-EE-FF or AA:BB:CC:DD:EE:FF"""
-    hexchars = "0123456789abcdef"
+    """
+    get number from mac-address
+    works only for upper case
+    examles:  AA-BB-CC-DD-EE-FF or AA:BB:CC:DD:EE:FF
+    """
+    hexchars = "0123456789ABCDEF"
     r=0
-
+    mac = mac.upper()
     for h in mac:
       if h in hexchars:
         r *= 0x10
